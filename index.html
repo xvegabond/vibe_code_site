@@ -1,1 +1,158 @@
-hello there
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MyPharmacy - Online Pharmacy Store</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <style>
+        /* Remove Bootstrap-specific styles, use Tailwind for styling */
+        .cart { position: fixed; top: 80px; right: 30px; width: 320px; background: #fff; box-shadow: 0 2px 12px rgba(0,0,0,0.1); border-radius: 8px; padding: 20px; z-index: 1000; }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <!-- Header & Navigation -->
+    <nav class="bg-white shadow-sm">
+        <div class="container mx-auto flex items-center justify-between py-4 px-6">
+            <a class="text-2xl font-bold text-blue-700" href="#">MyPharmacy</a>
+            <div class="space-x-6">
+                <a class="text-gray-700 hover:text-blue-700" href="#products">Products</a>
+                <a class="text-gray-700 hover:text-blue-700" href="#contact">Contact</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="py-16 text-center bg-blue-700 text-white">
+        <div class="container mx-auto">
+            <h1 class="text-4xl md:text-5xl font-bold mb-4">Welcome to MyPharmacy</h1>
+            <p class="text-lg md:text-xl">Your trusted online pharmacy for quality products and fast delivery.</p>
+        </div>
+    </section>
+
+    <!-- Products Section -->
+    <section id="products" class="py-12">
+        <div class="container mx-auto">
+            <h2 class="text-2xl font-bold mb-8 text-blue-700">Featured Products</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8" id="product-list">
+                <!-- Product cards will be injected here by JS -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Shopping Cart -->
+    <div class="cart bg-white shadow-lg rounded-lg p-6" id="cart">
+        <div class="font-bold text-lg mb-2">Shopping Cart</div>
+        <div class="cart-items max-h-48 overflow-y-auto mb-2" id="cart-items"></div>
+        <div class="mb-4">
+            <strong>Total: $<span id="cart-total">0.00</span></strong>
+        </div>
+        <div class="flex gap-2">
+            <button class="w-1/2 bg-green-600 text-white py-2 rounded hover:bg-green-700" id="paypal-btn">PayPal</button>
+            <button class="w-1/2 bg-blue-500 text-white py-2 rounded hover:bg-blue-600" id="mada-btn">Mada Pay</button>
+        </div>
+    </div>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-12 bg-gray-50">
+        <div class="container mx-auto">
+            <h2 class="text-2xl font-bold mb-2 text-blue-700">Contact Us</h2>
+            <p class="text-gray-700">Email: support@mypharmacy.com | Phone: +966 123 456 789</p>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-4 bg-white text-center border-t">
+        <div class="container mx-auto text-gray-500">
+            &copy; 2025 MyPharmacy. All rights reserved.
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script>
+        // Sample products
+        const products = [
+            { id: 1, name: 'Paracetamol 500mg', price: 5.99, img: 'https://via.placeholder.com/150?text=Paracetamol' },
+            { id: 2, name: 'Vitamin C 1000mg', price: 8.49, img: 'https://via.placeholder.com/150?text=Vitamin+C' },
+            { id: 3, name: 'Cough Syrup', price: 12.00, img: 'https://via.placeholder.com/150?text=Cough+Syrup' },
+            { id: 4, name: 'Antibiotic Cream', price: 7.25, img: 'https://via.placeholder.com/150?text=Antibiotic+Cream' },
+        ];
+        const cart = [];
+
+        function renderProducts() {
+            const list = document.getElementById('product-list');
+            list.innerHTML = '';
+            products.forEach(product => {
+                const col = document.createElement('div');
+                col.innerHTML = `
+                    <div class="bg-white rounded-lg shadow-md flex flex-col h-full product-card" data-product>
+                        <img src="${product.img}" class="rounded-t-lg w-full h-32 object-cover" alt="${product.name}">
+                        <div class="p-4 flex flex-col flex-1">
+                            <h5 class="font-bold text-lg mb-2">${product.name}</h5>
+                            <p class="text-blue-700 font-semibold mb-4">$${product.price.toFixed(2)}</p>
+                            <button class="mt-auto bg-blue-600 text-white py-2 rounded hover:bg-blue-700" onclick="addToCart(${product.id})">Add to Cart</button>
+                        </div>
+                    </div>
+                `;
+                list.appendChild(col);
+            });
+            // GSAP animation for products
+            gsap.from('[data-product]', { opacity: 0, y: 40, stagger: 0.1, duration: 0.7, ease: 'power2.out' });
+        }
+
+        function addToCart(id) {
+            const product = products.find(p => p.id === id);
+            const item = cart.find(i => i.id === id);
+            if (item) {
+                item.qty += 1;
+            } else {
+                cart.push({ ...product, qty: 1 });
+            }
+            renderCart();
+            // GSAP animation for cart
+            gsap.from('#cart', { scale: 1.05, duration: 0.2, yoyo: true, repeat: 1 });
+        }
+
+        function renderCart() {
+            const items = document.getElementById('cart-items');
+            items.innerHTML = '';
+            let total = 0;
+            cart.forEach(item => {
+                total += item.price * item.qty;
+                items.innerHTML += `
+                    <div class="flex justify-between items-center mb-2">
+                        <div>
+                            <strong>${item.name}</strong><br>
+                            <small>Qty: ${item.qty}</small>
+                        </div>
+                        <div>
+                            $${(item.price * item.qty).toFixed(2)}
+                            <button class="ml-2 bg-red-500 text-white rounded px-2 py-1 text-xs hover:bg-red-600" onclick="removeFromCart(${item.id})">&times;</button>
+                        </div>
+                    </div>
+                `;
+            });
+            document.getElementById('cart-total').textContent = total.toFixed(2);
+        }
+
+        function removeFromCart(id) {
+            const idx = cart.findIndex(i => i.id === id);
+            if (idx > -1) cart.splice(idx, 1);
+            renderCart();
+        }
+
+        // Placeholder for PayPal and Mada integration
+        document.getElementById('paypal-btn').onclick = function() {
+            alert('PayPal payment integration coming soon!');
+        };
+        document.getElementById('mada-btn').onclick = function() {
+            alert('Mada payment integration coming soon!');
+        };
+
+        // Initial render
+        renderProducts();
+        renderCart();
+    </script>
+</body>
+</html>
