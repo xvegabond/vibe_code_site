@@ -73,10 +73,10 @@
     <script>
         // Sample products
         const products = [
-            { id: 1, name: 'Paracetamol 500mg', price: 5.99, img: 'https://via.placeholder.com/150?text=Paracetamol' },
-            { id: 2, name: 'Vitamin C 1000mg', price: 8.49, img: 'https://via.placeholder.com/150?text=Vitamin+C' },
-            { id: 3, name: 'Cough Syrup', price: 12.00, img: 'https://via.placeholder.com/150?text=Cough+Syrup' },
-            { id: 4, name: 'Antibiotic Cream', price: 7.25, img: 'https://via.placeholder.com/150?text=Antibiotic+Cream' },
+            { id: 1, name: 'Paracetamol 500mg', price: 5.99, img: 'https://images.unsplash.com/photo-1588776814546-ec7e8c1b5b6b?auto=format&fit=crop&w=400&q=80', desc: 'Pain reliever and fever reducer.' },
+            { id: 2, name: 'Vitamin C 1000mg', price: 8.49, img: 'https://images.unsplash.com/photo-1505751172876-fa1923c5c528?auto=format&fit=crop&w=400&q=80', desc: 'Boosts immunity and antioxidant support.' },
+            { id: 3, name: 'Cough Syrup', price: 12.00, img: 'https://images.unsplash.com/photo-1515378791036-0648a3ef77b2?auto=format&fit=crop&w=400&q=80', desc: 'Soothes cough and sore throat.' },
+            { id: 4, name: 'Antibiotic Cream', price: 7.25, img: 'https://images.unsplash.com/photo-1516574187841-cb9cc2ca948b?auto=format&fit=crop&w=400&q=80', desc: 'For minor cuts, scrapes, and burns.' },
         ];
         const cart = [];
 
@@ -90,6 +90,7 @@
                         <img src="${product.img}" class="rounded-t-lg w-full h-32 object-cover" alt="${product.name}">
                         <div class="p-4 flex flex-col flex-1">
                             <h5 class="font-bold text-lg mb-2">${product.name}</h5>
+                            <p class="text-gray-600 text-sm mb-2">${product.desc}</p>
                             <p class="text-blue-700 font-semibold mb-4">$${product.price.toFixed(2)}</p>
                             <button class="mt-auto bg-blue-600 text-white py-2 rounded hover:bg-blue-700" onclick="addToCart(${product.id})">Add to Cart</button>
                         </div>
